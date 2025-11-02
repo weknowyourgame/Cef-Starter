@@ -1,0 +1,56 @@
+PRODUCT_NAME = "cef_starter"
+PKG_NAME = "//cef_starter"
+
+# Allow access from subpackages only.
+package(default_visibility = [
+    ":__subpackages__",
+])
+
+load("//bazel:library_helpers.bzl", "declare_cc_library", "declare_objc_library")
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+#
+# Source file lists.
+#
+
+srcs_browser = [
+    "app.cpp",
+    "app.h",
+    "client.cpp",
+    "client.h",
+    "main.cpp",
+]
+
+srcs_browser_linux = []
+
+srcs_browser_mac = []
+
+srcs_browser_win = []
+
+#
+# Linux targets.
+#
+
+# Include files directly in the declare_exe target. This simplifies the build
+# configuration.
+filegroup(
+    name = "SrcsLinux",
+    srcs = srcs_browser + srcs_browser_linux,
+    target_compatible_with = [
+        "@platforms//os:linux",
+    ],
+)
+
+#
+# Alias to platform-specific build targets.
+#
+
+alias(
+    name = PRODUCT_NAME,
+    actual = select({
+        "@platforms//os:linux": "{}/linux:{}".format(PKG_NAME, PRODUCT_NAME),
+        "@platforms//os:macos": "{}/mac:{}".format(PKG_NAME, PRODUCT_NAME),
+        "@platforms//os:windows": "{}/win:{}".format(PKG_NAME, PRODUCT_NAME),
+    }),
+)
+

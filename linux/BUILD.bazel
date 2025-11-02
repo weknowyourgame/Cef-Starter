@@ -1,0 +1,21 @@
+PRODUCT_NAME = "cef_starter"
+PKG_NAME = "//cef_starter"
+
+# Allow access from the parent package only.
+package(default_visibility = [
+    "{}:__pkg__".format(PKG_NAME),
+])
+
+load("//bazel/linux:exe_helpers.bzl", "declare_exe")
+
+#
+# Linux executable target.
+#
+
+declare_exe(
+    name = PRODUCT_NAME,
+    srcs = [
+        "{}:SrcsLinux".format(PKG_NAME),
+    ],
+)
+
